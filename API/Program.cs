@@ -1,7 +1,7 @@
 using API.DTOs;
-using Core.Entities;
-using Core.Interfaces;
-using Infrastructure;
+using API.Errors;
+using API.Extensions;
+using API.Middleware;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,33 +10,27 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-
-//DB CONTEXT
-builder.Services.AddDbContext<StoreContext>(opt => {
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-//REPOSITORY
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-
-//GENERIC REPOSITORY
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-//DTOs
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//EXTENSION METHOD
+builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//EXCEPTION MIDDLEWARE
+app.UseMiddleware<ExceptionMiddleware>();
+
+//ERROR HANDLING -> DEVELOPER EXCEPTION PAGE
+app.UseStatusCodePagesWithReExecute("/errors/{0}");
+
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// }
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 //STATIC FILES
 app.UseStaticFiles();
