@@ -1,3 +1,5 @@
+using API.DTOs;
+using Core.Entities;
 using Core.Interfaces;
 using Infrastructure;
 using Infrastructure.Data;
@@ -21,6 +23,12 @@ builder.Services.AddDbContext<StoreContext>(opt => {
 //REPOSITORY
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
+//GENERIC REPOSITORY
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+//DTOs
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +37,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//STATIC FILES
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
