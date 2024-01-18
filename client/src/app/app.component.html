@@ -1,2 +1,15 @@
-<h1>Welcome to the {{ title }}</h1>
-<p>The title of the App is {{ title }}</p>
+<app-nav-bar></app-nav-bar>
+
+<div class="container" style="margin-top: 140px;">
+  <h1>Welcome to the {{ title }}</h1>
+
+  <ul>
+    <li class="list-unstyled" *ngFor="let product of products">
+      {{ product.name }}
+    </li>
+  </ul>
+</div>
+
+<br/>
+
+
