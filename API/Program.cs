@@ -1,5 +1,3 @@
-using API.DTOs;
-using API.Errors;
 using API.Extensions;
 using API.Middleware;
 using Infrastructure.Data;
@@ -34,6 +32,9 @@ app.UseSwaggerUI();
 
 //STATIC FILES
 app.UseStaticFiles();
+
+//CORS
+app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 

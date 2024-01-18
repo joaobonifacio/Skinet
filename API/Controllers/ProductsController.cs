@@ -5,6 +5,7 @@ using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using API.Errors;
+using API.Helpers;
 
 namespace API.Controllers
 {
@@ -25,9 +26,13 @@ namespace API.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDTO>>> GetProducts()
+        public async Task<ActionResult<Pagination<ProductToReturnDTO>>> GetProducts([FromQuery]ProductSpecParams productParams)
         {
-            var spec = new ProductsWithTypesAndBrandsSpecification();
+            var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
+            
+            var countSpec = new ProductWithFiltersForCountSpecification(productParams);
+
+            var totalItems = await _productsRepo.CountAsync(countSpec);
 
             var products = await _productsRepo.ListAsync(spec);
 
@@ -36,9 +41,13 @@ namespace API.Controllers
                 return NoContent();
             }
 
-            var mappedProducts = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDTO>>(products);
+            var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDTO>>(products);
 
-            return Ok(mappedProducts);
+            // Response.Headers.Add("Access-Control-Allow-Origin", "https://localhost:4200");
+            // Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+            // Response.Headers.Add("Access-Control-Allow-Headedrs", "Content-Type, Authorization");
+
+            return Ok(new Pagination<ProductToReturnDTO>(productParams.PageIndex, productParams.PageSize, totalItems, data));
         }
 
         [HttpGet("{id}")]
