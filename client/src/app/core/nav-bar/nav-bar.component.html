@@ -1,12 +1,16 @@
 <header class="d-flex flex-row align-items-center justify-content-bewteen p-3 px-4 mb-3
     bg-white border-bottom fixed-top shadow-sm">
 
-    <img src="/assets/images/logo.png" alt="logo" style="max-height: 70px; margin-left: 20px; margin-right: 320px">
+    <img src="/assets/images/logo.png" alt="logo" class="logo" style="max-height: 70px; margin-left: 20px; margin-right: 320px" routerLink="/">
 
       <nav class="margin-left: 400px text-uppercase fs-4">
-        <a class="p-2 text-dark text-decoration-none" href="#" style="margin-right: 20px; margin-left: 20px">Home</a>
-        <a class="p-2 text-dark text-decoration-none" href="#" style="margin-right: 20px; margin-left: 20px">Shop</a>
-        <a class="p-2 text-dark text-decoration-none" href="#" style="margin-right: 20px; margin-left: 20px">Contact</a>
+        <a class="p-2" 
+          routerLink="/" 
+          routerLinkActive="active" 
+          [routerLinkActiveOptions]="{ exact: true }"
+          style="margin-right: 20px; margin-left: 20px">Home</a>
+        <a class="p-2" routerLink="/shop" routerLinkActive="active" style="margin-right: 20px; margin-left: 20px">Shop</a>
+        <a class="p-2" routerLink="/contact" routerLinkActive="active" style="margin-right: 20px; margin-left: 20px">Contact</a>
       </nav>
 
       <div class="d-flex align-items-center margin-right: 20px">
