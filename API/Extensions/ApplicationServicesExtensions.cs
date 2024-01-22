@@ -4,6 +4,7 @@ using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace API.Extensions
 {
@@ -19,6 +20,16 @@ namespace API.Extensions
             services.AddDbContext<StoreContext>(opt => {
                 opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
             });
+
+            //REDIS
+            services.AddSingleton<IConnectionMultiplexer>(c => {
+                var options = ConfigurationOptions.Parse(config.GetConnectionString("Redis"));
+
+                return ConnectionMultiplexer.Connect(options);
+            });
+
+            //REPOSITORY REDIS
+            services.AddScoped<IBasketRepository, BasketRepository>();
 
             //REPOSITORY
             services.AddScoped<IProductRepository, ProductRepository>();
