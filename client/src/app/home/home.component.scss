@@ -1,0 +1,11 @@
+.carousel-item img {
+    max-height: 520px; /* Adjust this value to your preference */
+    width: auto; /* This maintains the aspect ratio */
+    margin: auto; /* This centers the image in the carousel */
+    object-position: top; 
+    object-fit: cover; 
+}
+
+.carousel {
+    margin-top: -50px; /* Adjust this value as needed */
+}
