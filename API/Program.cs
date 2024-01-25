@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using API.Extensions;
 using API.Middleware;
 using Core.Entities.Identity;
@@ -9,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 
 //EXTENSION METHOD
@@ -17,6 +17,9 @@ builder.Services.AddApplicationServices(builder.Configuration);
 
 //IDENTITY EXTENSIONS
 builder.Services.AddIdentityServices(builder.Configuration);
+
+//SWAGGER EXTENSIONS
+builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
 
@@ -33,8 +36,10 @@ app.UseStatusCodePagesWithReExecute("/errors/{0}");
 //     app.UseSwaggerUI();
 // }
 
-app.UseSwagger();
-app.UseSwaggerUI();
+// app.UseSwagger();
+// app.UseSwaggerUI();
+
+app.UseSwaggerDocumentation();
 
 //STATIC FILES
 app.UseStaticFiles();

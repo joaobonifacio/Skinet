@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Core.Entities
 {
-    public class BasketItems
+    public class BasketItem
     {
         public string Id { get; set; }
         public string ProductName { get; set; }
