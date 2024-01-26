@@ -10,6 +10,7 @@ import { SectionHeaderComponent } from './section-header/section-header.componen
 import { BreadcrumbModule } from 'xng-breadcrumb';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
       preventDuplicates: true
     }),
     BreadcrumbModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    SharedModule
   ],
   exports:[
     NavBarComponent,

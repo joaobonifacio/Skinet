@@ -17,7 +17,7 @@ namespace API.Extensions
                     .SingleOrDefaultAsync(x=>x.Email==email);
             }
         
-        public static async Task<AppUser> FindByEmailFromClaimsPrincipalthis(this UserManager<AppUser> userManager, 
+        public static async Task<AppUser> FindByEmailFromClaimsPrincipal(this UserManager<AppUser> userManager, 
             ClaimsPrincipal user)
             {
                 return await userManager.Users

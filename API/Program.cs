@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using API.Extensions;
 using API.Middleware;
 using Core.Entities.Identity;
