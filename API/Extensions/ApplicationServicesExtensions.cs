@@ -31,11 +31,17 @@ namespace API.Extensions
             //REPOSITORY
             services.AddScoped<IProductRepository, ProductRepository>();
 
+            //UNIT OF WORK
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             //GENERIC REPOSITORY
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             //TOKEN SERVICE
             services.AddScoped<ITokenService, TokenService>();
+
+            //ORDER SERVICE
+            services.AddScoped<IOrderService, OrderService>();
 
             //DTOs
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
