@@ -11,7 +11,9 @@ export class TextInputComponent implements ControlValueAccessor {
   @Input() type = 'text';
   @Input() label = '';
 
-  constructor(@Self() public controlDir: NgControl){}
+  constructor(@Self() public controlDir: NgControl){
+    this.controlDir.valueAccessor = this;
+  }
 
   writeValue(obj: any): void {
   }
