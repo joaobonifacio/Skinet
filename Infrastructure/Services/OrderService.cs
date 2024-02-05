@@ -20,12 +20,14 @@ namespace Infrastructure.Services
             _basketRepo = basketRepo;
         }
 
-        public async Task<Order> CreateOrderAsync(string buyerEmail, int deliveyMethodId, string basketId, Address shippingAddress)
+        public async Task<Order> CreateOrderAsync(string buyerEmail, int deliveyMethodId, string basketId, 
+            Address shippingAddress)
         {
             //get basket from repo
             var basket = await _basketRepo.GetBasketAsync(basketId);
+            //O basket pode estar null p ter sido deleted do redis
 
-            //get itrems from product repo
+            //get items from product repo
             var items = new List<OrderItem>();
 
             foreach(var item in basket.Items)
@@ -42,11 +44,27 @@ namespace Infrastructure.Services
             //calculate sub total
             var subTotal = items.Sum(item=>item.Price * item.Quantity);
 
-            //create order
-            var order = new Order(items, buyerEmail, shippingAddress, deliveryMethod, subTotal);
+            //check to see if order already exists
+            var spec = new OrderByPaymentIntentIdSpecification(basket.PaymentIntentId);
 
-            //Add to db
-            _unitOfWork.Repository<Order>().Add(order);
+            var order = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
+
+            //if order already exists update
+            if(order != null)
+            {
+                order.ShipToAddress = shippingAddress;
+                order.DeliveryMethod = deliveryMethod;
+                order.SubTotal = subTotal;
+                _unitOfWork.Repository<Order>().Update(order);     
+            }
+            else
+            {
+                //create order
+                order = new Order(items, buyerEmail, shippingAddress, deliveryMethod, subTotal, basket.PaymentIntentId);
+
+                //Add to db
+                _unitOfWork.Repository<Order>().Add(order);
+            }
 
             //TODO: save to db
             var result = await _unitOfWork.Complete();
@@ -56,8 +74,10 @@ namespace Infrastructure.Services
                 return null;
             }
             
+            //Só queremos apagar o basket quando o pagamento for bem sucedido
+            // e fazemos isso no client side
             //delete basket
-            await _basketRepo.DeleteBasketAsync(basketId);
+            // await _basketRepo.DeleteBasketAsync(basketId);
 
             //return order
             return order;

@@ -43,6 +43,9 @@ namespace API.Extensions
             //ORDER SERVICE
             services.AddScoped<IOrderService, OrderService>();
 
+            //STRIPE SERVICE
+            services.AddScoped<IPaymentService, PaymentService>();
+
             //DTOs
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
