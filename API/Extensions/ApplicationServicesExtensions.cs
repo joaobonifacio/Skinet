@@ -1,3 +1,4 @@
+using System.Net.Security;
 using API.Errors;
 using Core.Interfaces;
 using Infrastructure;
@@ -24,6 +25,9 @@ namespace API.Extensions
 
                 return ConnectionMultiplexer.Connect(options);
             });
+
+            //CACHE
+            services.AddSingleton<IResponseCacheService, ResponseCacheService>();
 
             //REPOSITORY REDIS
             services.AddScoped<IBasketRepository, BasketRepository>();
