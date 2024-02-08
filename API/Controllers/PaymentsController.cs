@@ -13,12 +13,13 @@ namespace API.Controllers
     {
         private readonly IPaymentService _paymentService;
         private readonly ILogger<PaymentsController> _logger;
-        private const string WhSecret = "whsec_fb0a5eabcde17e7d01075070d9d0905951f7c74a078da155ac0c5d97f1206aca";
+        private readonly string _whSecret;
 
-        public PaymentsController(IPaymentService paymentService, ILogger<PaymentsController> logger)
+        public PaymentsController(IPaymentService paymentService, ILogger<PaymentsController> logger, IConfiguration config)
         {
             _paymentService = paymentService;
             _logger = logger;
+            _whSecret = config.GetSection("StripeSettings:WhSecret").Value;
         }
 
         [Authorize]
@@ -50,7 +51,7 @@ namespace API.Controllers
             var signature = Request.Headers["Stripe-Signature"].FirstOrDefault();
 
             //O stripe vai passar o WhSecret nos headers
-            var stripeEvent = EventUtility.ConstructEvent(json, signature, WhSecret, tolerance: 300,
+            var stripeEvent = EventUtility.ConstructEvent(json, signature, _whSecret, tolerance: 300,
                 throwOnApiVersionMismatch: false); 
 
             PaymentIntent intent;

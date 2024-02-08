@@ -5,6 +5,7 @@ using Infrastructure.Data;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,13 @@ app.UseSwaggerDocumentation();
 //STATIC FILES
 app.UseStaticFiles();
 
+//ESTE É DAS IMAGENS
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content")),
+    RequestPath = "/Content"
+});
+
 //CORS
 app.UseCors("CorsPolicy");
 
@@ -51,6 +59,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapFallbackToController("Index", "Fallback");
 
 //MIGRATION
 using var scope = app.Services.CreateScope();
@@ -61,6 +70,17 @@ var identityContext = services.GetRequiredService<AppIdentityDbContext>();
 var userManager = services.GetRequiredService<UserManager<AppUser>>();
 
 var logger = services.GetRequiredService<ILogger<Program>>();
+
+// try
+// {
+//     context.Database.EnsureDeleted();
+//     identityContext.Database.EnsureDeleted();
+//     logger.LogInformation("Databases dropped successfully.");
+// }
+// catch (Exception ex)
+// {
+//     logger.LogError(ex, "An error occurred while dropping the databases.");
+// }
 
 try
 {
