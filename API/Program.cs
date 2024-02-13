@@ -6,7 +6,6 @@ using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
-using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
